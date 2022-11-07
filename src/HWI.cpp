@@ -1,61 +1,89 @@
 #include "HWI.h"
+#include <QDebug>
 
 QString HWI::productID() {
-  QString result = runProcess("computersystem get model");
-  return removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_ComputerSystemProduct | "
+      "Select-Object IdentifyingNumber");
+  return result.trimmed().split("\n").last();
 }
 
 QString HWI::machineID() {
-  QString result = runProcess("computersystem get name");
-  return removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_ComputerSystem | "
+      "Select-Object Name");
+  return result.trimmed().split("\n").last();
 }
 
 QString HWI::os() {
-  QString result = runProcess("os get caption");
-  return removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_OperatingSystem | "
+      "Select-Object Caption");
+  return result.trimmed().split("\n").last();
 }
 
 QString HWI::version() {
-  QString result = runProcess("os get version");
-  return removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_OperatingSystem | "
+      "Select-Object Version");
+  return result.trimmed().split("\n").last();
 }
 
 QString HWI::build() {
-  QString result = runProcess("os get buildNumber");
-  return removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_OperatingSystem | "
+      "Select-Object BuildNumber");
+  return result.trimmed().split("\n").last();
 }
 
 QString HWI::RAM() {
-  QString result = runProcess("computersystem get totalphysicalmemory");
-  result = removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_ComputerSystem | "
+      "Select-Object TotalPhysicalMemory");
+  result = result.trimmed().split("\n").last();
   return convertToGB(result);
 }
 
 QString HWI::CPUName() {
-  QString result = runProcess("cpu get name");
-  result = removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_Processor | "
+      "Select-Object Name");
+  result = result.remove("-").trimmed().split("\n").last();
   return result.split(" ").first(3).join(" ").simplified();
 }
 
 QString HWI::CPUClockSpeed() {
-  QString result = runProcess("cpu get name");
-  result = removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_Processor | "
+      "Select-Object Name");
   return result.split(" ").last().simplified();
 }
 
 QVector<HWI::GPU> HWI::GPUs() {
   QVector<HWI::GPU> GPUs;
 
-  QString result = runProcess("path win32_VideoController get name").trimmed();
-  QStringList names = result.split("\n");
+  QString result = runProcess(
+                       "Get-CimInstance -ClassName Win32_VideoController | "
+                       "Select-Object Name")
+                       .trimmed();
+  QStringList names = result.remove("-").trimmed().split("\n");
+  names.removeFirst();
   names.removeFirst();
 
-  result = runProcess("path win32_VideoController get driverVersion").trimmed();
-  QStringList versions = result.split("\n");
+  result = runProcess(
+               "Get-CimInstance -ClassName Win32_VideoController | "
+               "Select-Object DriverVersion")
+               .trimmed();
+  QStringList versions = result.remove("-").trimmed().split("\n");
+  versions.removeFirst();
   versions.removeFirst();
 
-  result = runProcess("path Win32_videocontroller get adapterram").trimmed();
-  QStringList VRAMs = result.split("\n");
+  result = runProcess(
+               "Get-CimInstance -ClassName Win32_VideoController | "
+               "Select-Object AdapterRam")
+               .trimmed();
+  QStringList VRAMs = result.remove("-").trimmed().split("\n");
+  VRAMs.removeFirst();
   VRAMs.removeFirst();
 
   for (int i = 0; i < names.size(); i++) {
@@ -70,42 +98,49 @@ QVector<HWI::GPU> HWI::GPUs() {
 }
 
 QString HWI::resolution() {
-  QString result =
-      runProcess("path Win32_videocontroller get CurrentHorizontalResolution")
-          .trimmed();
-  QString resolution = removeHeader(result);
+  QString result = runProcess(
+                       "Get-CimInstance -ClassName Win32_VideoController | "
+                       "Select-Object CurrentHorizontalResolution")
+                       .trimmed();
+  QString resolution = result.trimmed().split("\n").last().simplified();
 
   resolution.append("x");
 
-  result =
-      runProcess("path Win32_videocontroller get CurrentVerticalResolution")
-          .trimmed();
-  resolution.append(removeHeader(result));
+  result = runProcess(
+               "Get-CimInstance -ClassName Win32_VideoController | "
+               "Select-Object CurrentVerticalResolution")
+               .trimmed();
+  resolution.append(result.trimmed().split("\n").last().simplified());
 
   return resolution;
 }
 
 QString HWI::refreshRate() {
-  QString result = runProcess("path Win32_videocontroller get MinRefreshRate");
-  QString refreshRate = removeHeader(result);
+  QString result = runProcess(
+      "Get-CimInstance -ClassName Win32_VideoController | Select-Object "
+      "MinRefreshRate");
+  QString refreshRate = result.trimmed().split("\n").last().simplified();
 
   refreshRate.append("-");
 
-  result = runProcess("path Win32_videocontroller get MaxRefreshRate");
-  refreshRate.append(removeHeader(result));
+  result = runProcess(
+      "Get-CimInstance -ClassName Win32_VideoController | Select-Object "
+      "MaxRefreshRate");
+  refreshRate.append(result.trimmed().split("\n").last().simplified());
 
   return refreshRate;
 }
 
 QString HWI::runProcess(QString target) {
   QProcess process;
-  process.start("wmic", QString(target).split(" "));
+  process.start("C:/Windows/system32/WindowsPowerShell/v1.0/powershell.exe",
+                QString(target).split(" "));
   process.waitForFinished();
   return QString(process.readAllStandardOutput());
 }
 
 QString HWI::removeHeader(QString string) {
-  return string.remove(string.split(" ").first()).simplified();
+  return string.remove(string.split(" ").first()).simplified().remove("-");
 }
 
 QString HWI::convertToGB(QString string) {
