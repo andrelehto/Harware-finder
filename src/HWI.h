@@ -1,4 +1,3 @@
-#include <QDebug>
 #include <QProcess>
 
 class HWI {
