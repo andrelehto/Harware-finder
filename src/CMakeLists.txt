@@ -3,3 +3,8 @@ add_executable(Hardware-finder
 )
 
 target_link_libraries(Hardware-finder PRIVATE Qt6::Core)
+
+add_custom_command(TARGET Hardware-finder POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:Hardware-finder> $<TARGET_FILE_DIR:Hardware-finder>
+  COMMAND_EXPAND_LISTS
+  )
