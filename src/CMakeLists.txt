@@ -1,5 +1,7 @@
 add_executable(Hardware-finder
     main.cpp
+    HWI.h
+    HWI.cpp
 )
 
 target_link_libraries(Hardware-finder PRIVATE Qt6::Core)
