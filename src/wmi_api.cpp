@@ -10,6 +10,7 @@ WMIAPI::WMIAPI(QObject* parent) {
   addTask(Win32_OperatingSystem(std::string("BuildNumber")), Info::Build);
   addTask(Win32_ComputerSystem(std::string("TotalPhysicalMemory")), Info::Ram);
   addTask(Win32_Processor(std::string("Name")), Info::CpuName);
+  addTask(Win32_Processor(std::string("MaxClockSpeed")), Info::CpuClockSpeed);
   addTask(Win32_VideoController(std::string("CurrentHorizontalResolution")),
           Info::ResolutionHorizontal);
   addTask(Win32_VideoController(std::string("CurrentVerticalResolution")),
@@ -97,6 +98,9 @@ void WMIAPI::runSearch() {
       case Info::CpuName:
         _cpuName = result;
         break;
+      case Info::CpuClockSpeed:
+        _cpuClockSpeed = convertToGHz(result);
+        break;
       case Info::ResolutionVertical:
         _resolutionVertical = result;
         break;
@@ -151,7 +155,7 @@ QString WMIAPI::CPUName() {
 }
 
 QString WMIAPI::CPUClockSpeed() {
-  return _cpuName.split(" ").last().simplified();
+  return _cpuClockSpeed;
 }
 
 QString WMIAPI::resolution() {
@@ -166,10 +170,12 @@ QVector<WMIAPI::GPU> WMIAPI::GPUs() {
   return _GPUs;
 }
 
-QString WMIAPI::convertToGB(QString string) {
-  return QString::number(
-             QString(string).simplified().split(" ").last().toDouble() /
-                 1000000000,
-             'g', 3)
+QString WMIAPI::convertToGB(QString input) {
+  return QString::number(QString(input).toDouble() / 1000000000, 'g', 3)
       .append(" GB");
+}
+
+QString WMIAPI::convertToGHz(QString input) {
+  return QString::number(QString(input).toDouble() / 1000, 'G', 3)
+      .append(" GHz");
 }

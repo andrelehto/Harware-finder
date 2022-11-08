@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
            << "\nProcessor info (CPU):"
            << "\n-------------------------------------------"
            << "\nCPU Name: " << wmiapi->CPUName()
-           << "\nCPU Clock Speed: " << wmiapi->CPUClockSpeed()
+           << "\nCPU Max Clock Speed: " << wmiapi->CPUClockSpeed()
            << "\n-------------------------------------------"
            << "\n\n"
            << "\nGraphic card info (GPU):"

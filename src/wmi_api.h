@@ -45,6 +45,7 @@ class WMIAPI : public QObject {
     Build,
     Ram,
     CpuName,
+    CpuClockSpeed,
     ResolutionVertical,
     ResolutionHorizontal,
     RefreshRateMin,
@@ -67,5 +68,6 @@ class WMIAPI : public QObject {
   QVector<Task> tasks;
 
   void addTask(std::string target, Info info);
-  QString convertToGB(QString bytes);
+  QString convertToGB(QString input);
+  QString convertToGHz(QString input);
 };
