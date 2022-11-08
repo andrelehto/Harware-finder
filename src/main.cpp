@@ -2,7 +2,6 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QFileInfo>
-#include <QProcess>
 #include <QTextStream>
 #include "wmi_api.h"
 

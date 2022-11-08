@@ -1,5 +1,4 @@
 #include "wmi_api.h"
-#include <QDebug>
 
 WMIAPI::WMIAPI(QObject* parent) {
   QString VRAMFetcher =
