@@ -2,6 +2,15 @@
 #include <QDebug>
 
 WMIAPI::WMIAPI(QObject* parent) {
+  QString VRAMFetcher =
+      "foreach ($VRAM in (Get-ItemProperty -Path "
+      "\"HKLM:\\SYSTEM\\ControlSet001\\Control\\Class\\{4d36e968-e325-11ce-"
+      "bfc1-08002be10318}\\0*\" -Name HardwareInformation.qwMemorySize "
+      "-ErrorAction SilentlyContinue).\"HardwareInformation.qwMemorySize\") { "
+      "Get-CimInstance -ClassName CIM_VideoController | Where-Object "
+      "-FilterScript {$_.AdapterDACType -ne \"Internal\"} | ForEach-Object "
+      "-Process { $VRAM/1GB } }";
+
   addTask(Win32_ComputerSystemProduct(std::string("IdentifyingNumber")),
           Info::ProductID);
   addTask(Win32_ComputerSystem(std::string("Name")), Info::MachineID);
@@ -20,9 +29,10 @@ WMIAPI::WMIAPI(QObject* parent) {
   addTask(Win32_VideoController(std::string("MaxRefreshRate")),
           Info::RefreshRateMax);
   addTask(Win32_VideoController(std::string("Name")), Info::GpuNames);
+  addTask(Win32_VideoController(std::string("AdapterDACType")), Info::GpuType);
   addTask(Win32_VideoController(std::string("DriverVersion")),
           Info::GpuVersions);
-  addTask(Win32_VideoController(std::string("AdapterRam")), Info::GpuVram);
+  addTask(VRAMFetcher.toStdString(), Info::GpuVram);
 }
 
 void WMIAPI::addTask(std::string target, Info type) {
@@ -40,7 +50,7 @@ void WMIAPI::runSearch() {
         QString(task.target).split(" "));
   }
 
-  QStringList gpuNames, gpuVersions, gpuVrams;
+  QStringList gpuNames, gpuTypes, gpuVersions, gpuVRAMs;
 
   for (auto& task : tasks) {
     task.process->waitForFinished();
@@ -53,6 +63,13 @@ void WMIAPI::runSearch() {
                        .trimmed()
                        .split("\n");
         break;
+      case Info::GpuType:
+        gpuTypes = QString(task.process->readAllStandardOutput())
+                       .remove("-")
+                       .remove("AdapterDACType")
+                       .trimmed()
+                       .split("\n");
+        break;
       case Info::GpuVersions:
         gpuVersions = QString(task.process->readAllStandardOutput())
                           .remove("-")
@@ -61,11 +78,11 @@ void WMIAPI::runSearch() {
                           .split("\n");
         break;
       case Info::GpuVram:
-        gpuVrams = QString(task.process->readAllStandardOutput())
-                       .remove("-")
-                       .remove("AdapterRam")
+        gpuVRAMs = QString(task.process->readAllStandardOutput())
                        .trimmed()
                        .split("\n");
+
+        break;
     }
 
     QString result = QString(task.process->readAllStandardOutput())
@@ -120,8 +137,11 @@ void WMIAPI::runSearch() {
   for (qsizetype i = 0; i < gpuNames.size(); i++) {
     GPU gpu;
     gpu.name = gpuNames[i].toLocal8Bit().constData();
-    gpu.driverVersion = gpuVersions[i].toLocal8Bit();
-    gpu.VRAM = convertToGB(gpuVrams[i].toLocal8Bit());
+    gpu.driverVersion = gpuVersions[i].toLocal8Bit().constData();
+    gpu.type = gpuTypes[i].toLocal8Bit().constData();
+    i == 0
+        ? "Internal"
+        : gpu.vram = QString(gpuVRAMs[i - 1] + " GB").toLocal8Bit().constData();
     _GPUs.push_back(gpu);
   }
 }

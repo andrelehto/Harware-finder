@@ -76,9 +76,9 @@ int main(int argc, char* argv[]) {
            << "\n-------------------------------------------";
 
     for (const auto& GPU : wmiapi->GPUs()) {
-      stream << "\nName: " << GPU.name
+      stream << "\nName: " << GPU.name << "\nType: " << GPU.type
              << "\nDriver version: " << GPU.driverVersion
-             << "\nVRAM: " << GPU.VRAM
+             << "\nVRAM: " << GPU.vram
              << "\n-------------------------------------------";
     }
   }

@@ -19,7 +19,7 @@ class WMIAPI : public QObject {
   explicit WMIAPI(QObject* parent = nullptr);
 
   struct GPU {
-    QString name, driverVersion, VRAM;
+    QString name, type, driverVersion, vram;
   };
 
   void runSearch();
@@ -51,6 +51,7 @@ class WMIAPI : public QObject {
     RefreshRateMin,
     RefreshRateMax,
     GpuNames,
+    GpuType,
     GpuVersions,
     GpuVram
   };
