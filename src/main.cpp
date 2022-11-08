@@ -12,7 +12,8 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setApplicationVersion("1.0");
   QCommandLineParser parser;
 
-  parser.setApplicationDescription("CLI tool to read out hardware info.");
+  parser.setApplicationDescription(
+      "\nCLI tool to fetches hardware information from host-machine.");
   parser.addHelpOption();
   parser.addVersionOption();
 
@@ -20,7 +21,7 @@ int main(int argc, char* argv[]) {
       QStringList() << "t"
                     << "target-file",
       QCoreApplication::translate(
-          "main", "Target <file-path> to write hardware-info to."),
+          "main", "Target <file-path> to write hardware information to."),
       QCoreApplication::translate("main", "file-path"));
   parser.addOption(targetFileOption);
 
