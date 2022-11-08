@@ -1,6 +1,6 @@
 # Hardware-finder
 
-Hardware-finder provides the ability to gather hardware-info from any Windows machine.
+Hardware-finder provides the ability to gather hardware information from any Windows machine.
 
 ## Contents
 
@@ -18,7 +18,7 @@ Hardware-finder provides the ability to gather hardware-info from any Windows ma
 
 ## Build `Hardware-finder`
 
-Requirements: git, cmake, c++ compiler (gcc, clang, MSVC)
+Requirements: git, cmake, c++ compiler (MSVC)
 
 1. Download repository:
 
