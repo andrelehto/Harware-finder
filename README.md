@@ -1,6 +1,6 @@
 # Hardware-finder
 
-Hardware-finder provides the ability to gather hardware information from any Windows machine.
+Hardware-finder provides the ability to gather hardware information from any Windows machine. (Tested on Windows 10 & Windows 11)
 
 ## Contents
 
