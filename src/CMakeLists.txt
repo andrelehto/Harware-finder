@@ -1,7 +1,9 @@
+set(CMAKE_AUTOMOC ON)
+
 add_executable(Hardware-finder
     main.cpp
-    HWI.h
-    HWI.cpp
+    wmi_api.h
+    wmi_api.cpp
 )
 
 target_link_libraries(Hardware-finder PRIVATE Qt6::Core)
