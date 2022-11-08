@@ -136,12 +136,13 @@ void WMIAPI::runSearch() {
 
   for (qsizetype i = 0; i < gpuNames.size(); i++) {
     GPU gpu;
-    gpu.name = gpuNames[i].toLocal8Bit().constData();
-    gpu.driverVersion = gpuVersions[i].toLocal8Bit().constData();
-    gpu.type = gpuTypes[i].toLocal8Bit().constData();
-    i == 0
-        ? "Internal"
-        : gpu.vram = QString(gpuVRAMs[i - 1] + " GB").toLocal8Bit().constData();
+    gpu.name = gpuNames[i].trimmed().toLocal8Bit().constData();
+    gpu.driverVersion = gpuVersions[i].trimmed().toLocal8Bit().constData();
+    gpu.type = gpuTypes[i].trimmed().toLocal8Bit().constData();
+    gpu.vram =
+        gpu.type != "Internal"
+            ? QString(gpuVRAMs.takeAt(0) + " GB").toLocal8Bit().constData()
+            : gpu.type;
     _GPUs.push_back(gpu);
   }
 }
