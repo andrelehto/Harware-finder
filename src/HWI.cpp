@@ -139,10 +139,6 @@ QString HWI::runProcess(QString target) {
   return QString(process.readAllStandardOutput());
 }
 
-QString HWI::removeHeader(QString string) {
-  return string.remove(string.split(" ").first()).simplified().remove("-");
-}
-
 QString HWI::convertToGB(QString string) {
   return QString::number(
              QString(string).simplified().split(" ").last().toDouble() /

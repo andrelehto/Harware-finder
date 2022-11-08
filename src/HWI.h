@@ -20,6 +20,5 @@ class HWI {
 
  private:
   static QString runProcess(QString target);
-  static QString removeHeader(QString string);
   static QString convertToGB(QString bytes);
 };
