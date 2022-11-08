@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
            << "\n Product ID: " << wmiapi->productID()
            << "\n Machine ID: " << wmiapi->machineID()
            << "\n OS: " << wmiapi->os() << "\n Build: " << wmiapi->build()
-           << "\n Version" << wmiapi->version() << "\n RAM: " << wmiapi->RAM()
+           << "\n Version: " << wmiapi->version() << "\n RAM: " << wmiapi->RAM()
            << "\n-------------------------------------------"
            << "\n\n"
            << "\nDisplay info:"
