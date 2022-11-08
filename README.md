@@ -42,7 +42,7 @@ Requirements: git, cmake, c++ compiler (gcc, clang, MSVC)
 
 ## Using `Hardware-finder`
 
-Hardware-finder is run as a CLI-tool. To recieve the available commands run:
+Hardware-finder is run as a CLI-tool. To recieve available commands run:
 ```terminal
 .\Harware-finder.exe -h
 ```
