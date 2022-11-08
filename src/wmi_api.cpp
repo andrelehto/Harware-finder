@@ -65,10 +65,11 @@ void WMIAPI::runSearch() {
         break;
       case Info::GpuType:
         gpuTypes = QString(task.process->readAllStandardOutput())
-                       .remove("-")
                        .remove("AdapterDACType")
                        .trimmed()
+                       .remove("-")
                        .split("\n");
+        gpuTypes.removeFirst();
         break;
       case Info::GpuVersions:
         gpuVersions = QString(task.process->readAllStandardOutput())
@@ -81,7 +82,6 @@ void WMIAPI::runSearch() {
         gpuVRAMs = QString(task.process->readAllStandardOutput())
                        .trimmed()
                        .split("\n");
-
         break;
     }
 
@@ -140,7 +140,7 @@ void WMIAPI::runSearch() {
     gpu.driverVersion = gpuVersions[i].trimmed().toLocal8Bit().constData();
     gpu.type = gpuTypes[i].trimmed().toLocal8Bit().constData();
     gpu.vram =
-        gpu.type != "Internal"
+        gpu.type == "Integrated RAMDAC"
             ? QString(gpuVRAMs.takeAt(0) + " GB").toLocal8Bit().constData()
             : gpu.type;
     _GPUs.push_back(gpu);
