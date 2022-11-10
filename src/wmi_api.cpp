@@ -146,47 +146,47 @@ void WMIAPI::runSearch() {
   }
 }
 
-QString WMIAPI::productID() {
+QString WMIAPI::productID() const {
   return _productID;
 }
 
-QString WMIAPI::machineID() {
+QString WMIAPI::machineID() const {
   return _machineID;
 }
 
-QString WMIAPI::os() {
+QString WMIAPI::os() const {
   return _os;
 }
 
-QString WMIAPI::version() {
+QString WMIAPI::version() const {
   return _version;
 }
 
-QString WMIAPI::build() {
+QString WMIAPI::build() const {
   return _build;
 }
 
-QString WMIAPI::RAM() {
+QString WMIAPI::RAM() const {
   return _ram;
 }
 
-QString WMIAPI::CPUName() {
+QString WMIAPI::CPUName() const {
   return _cpuName.split(" ").first(3).join(" ").simplified();
 }
 
-QString WMIAPI::CPUClockSpeed() {
+QString WMIAPI::CPUClockSpeed() const {
   return _cpuClockSpeed;
 }
 
-QString WMIAPI::resolution() {
+QString WMIAPI::resolution() const {
   return QString(_resolutionHorizontal + "x" + _resolutionVertical);
 }
 
-QString WMIAPI::refreshRate() {
+QString WMIAPI::refreshRate() const {
   return QString(_refreshRateMin + "-" + _refreshRateMax);
 }
 
-QVector<WMIAPI::GPU> WMIAPI::GPUs() {
+QVector<WMIAPI::GPU> WMIAPI::GPUs() const {
   return _GPUs;
 }
 

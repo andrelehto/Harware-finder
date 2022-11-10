@@ -24,17 +24,17 @@ class WMIAPI : public QObject {
 
   void runSearch();
 
-  QString productID();
-  QString machineID();
-  QString os();
-  QString version();
-  QString build();
-  QString RAM();
-  QString CPUName();
-  QString CPUClockSpeed();
-  QString resolution();
-  QString refreshRate();
-  QVector<GPU> GPUs();
+  QString productID() const;
+  QString machineID() const;
+  QString os() const;
+  QString version() const;
+  QString build() const;
+  QString RAM() const;
+  QString CPUName() const;
+  QString CPUClockSpeed() const;
+  QString resolution() const;
+  QString refreshRate() const;
+  QVector<GPU> GPUs() const;
 
  private:
   enum class Info {
